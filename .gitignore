@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.vite/
+
+# Fahrzeugakten und persönliche Projektexporte
+*.astraplanung.json
+*Bordakte.html
+*Werkstattmappe.html
+*-Grundriss.svg
+Astraplanung-Einkauf*.csv
+Astraplanung-Zuschnitte*.csv
+privat/
+exports/
+
+# Lokale Schlüssel und Konfiguration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Persönliche Planungsunterlagen
+*.pdf
+*.xls
+*.ppt
+*.skp
