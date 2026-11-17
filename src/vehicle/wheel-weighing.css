@@ -1,0 +1,116 @@
+.rw-axes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+  gap: 14px;
+  margin: 16px 0;
+}
+.rw-axle {
+  margin: 0;
+  padding: 12px 14px 10px;
+  min-width: 0;
+  border: 1px solid var(--line, #ced8cf);
+  border-radius: 8px;
+}
+.rw-axle legend {
+  padding: 0 6px;
+  font-size: 0.94rem;
+  font-weight: 650;
+  color: var(--ink, #273c2c);
+}
+.rw-sides {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.rw-sides > div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+.rw-sides > div > small {
+  font-size: 0.75rem;
+  color: var(--muted, #526356);
+}
+.rw-axle-total {
+  display: flex;
+  justify-content: space-between;
+  gap: 7px;
+  border-top: 1px solid var(--line, #ced8cf);
+  padding-top: 7px;
+  margin-top: 10px;
+  font-size: 0.82rem;
+}
+.rw-axle-total strong {
+  font-variant-numeric: tabular-nums;
+}
+.rw-axle-config,
+.rw-add-weight,
+.rw-included,
+.rw-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.rw-axle-config {
+  border-bottom: 1px solid var(--line, #ced8cf);
+  padding: 6px 0;
+}
+.rw-axle-config > span:first-child {
+  min-width: 9em;
+}
+.rw-axle-config + button,
+.rw-clear {
+  margin-top: 12px;
+}
+.rw-add-weight {
+  align-items: flex-end;
+  margin: 12px 0;
+}
+.rw-add-weight label {
+  min-width: min(100%, 220px);
+}
+.rw-included {
+  border-top: 1px solid var(--line, #ced8cf);
+  padding: 10px 0;
+  align-items: flex-end;
+}
+.rw-included > strong {
+  align-self: center;
+  font-size: 0.84rem;
+  flex: 1;
+}
+.rw-included .rw-reading {
+  flex: 1 1 110px;
+  max-width: 170px;
+}
+.rw-error {
+  font-size: 0.75rem;
+  color: #93442e;
+}
+.rw-reading input[aria-invalid='true'] {
+  border-color: #a9492b;
+}
+.rw-vehicle-entry {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 15px 0 0;
+}
+.rw-vehicle-entry > small {
+  font-size: 0.8rem;
+  color: var(--muted, #586c5f);
+}
+@media (max-width: 520px) {
+  .rw-actions {
+    gap: 6px;
+  }
+  .rw-axle {
+    padding: 9px;
+  }
+  .rw-add-weight label {
+    min-width: 100%;
+  }
+}

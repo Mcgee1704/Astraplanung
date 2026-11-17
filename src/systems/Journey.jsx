@@ -11,6 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 import { seasons } from './model.js';
+import WheelWeighing from '../vehicle/WheelWeighing.jsx';
 import {
   fmt,
   days,
@@ -297,7 +298,16 @@ export function Weight({ model, r }) {
   ];
   return (
     <>
-      <Pane title="Reisefertige Masse" icon={Scale}>
+      <WheelWeighing model={model} r={r} />
+      <Pane
+        title="Reisefertige Masse"
+        icon={Scale}
+        sub={
+          r.wheelBaseline
+            ? 'Prognose auf Basis der gewählten Radwägung am Ausgangsfahrzeug.'
+            : 'Prognose aus Basisfahrzeug, Ausbau und Reisebeladung.'
+        }
+      >
         <Metrics
           rows={[
             ['Masse bei Abfahrt', fmt(r.massKg, 'kg'), Truck],
@@ -329,7 +339,18 @@ export function Weight({ model, r }) {
             </tbody>
           </table>
         </div>
-        {!r.hasAxleWeights && (
+        {r.multiAxle && (
+          <Notice>
+            Bei mehr als zwei Achsen zeigt die Radwägung die tatsächliche Last
+            jeder Achse. Die Längsschwerpunktrechnung gilt für Zweiachser.
+          </Notice>
+        )}
+        {r.wheelBaseline && !r.multiAxle && !r.hasAxleWeights && (
+          <Notice>
+            Die ausgewählte Ausgangswägung benötigt vollständige Radmessungen.
+          </Notice>
+        )}
+        {!r.wheelBaseline && !r.multiAxle && !r.hasAxleWeights && (
           <Notice>
             Für die Achslastprognose fehlen Ausgangswägungen. Wiege Vorder- und
             Hinterachse vor dem Ausbau im selben Beladungszustand und trage die
@@ -350,15 +371,31 @@ export function Weight({ model, r }) {
         )}
         {r.baseDiscrepancy != null && Math.abs(r.baseDiscrepancy) >= 1 && (
           <Notice>
-            Die Summe der Achswägungen weicht um {fmt(r.baseDiscrepancy, 'kg')}{' '}
-            von der eingetragenen Basismasse ab. Für die Rechnung gilt die Summe
-            der Achswägungen.
+            Die{' '}
+            {r.wheelBaseline && r.includedKg
+              ? 'um mitgewogene Positionen bereinigte Ausgangswägung'
+              : 'Summe der Achswägungen'}{' '}
+            weicht um {fmt(r.baseDiscrepancy, 'kg')} von der eingetragenen
+            Basismasse ab. Die Prognose verwendet die Wägung.
           </Notice>
         )}
         <More title="Massenaufstellung und Rechenweg">
           <Ledger
             rows={[
-              ['Basis vor Ausbau', fmt(r.baseKg, 'kg')],
+              [
+                r.wheelBaseline
+                  ? 'Gewogener Ausgangszustand'
+                  : 'Basis vor Ausbau',
+                fmt(r.baseKg, 'kg'),
+              ],
+              ...(r.wheelBaseline
+                ? [
+                    [
+                      'Mitgewogene Modellpositionen, abzuziehen',
+                      fmt(r.includedKg === null ? null : -r.includedKg, 'kg'),
+                    ],
+                  ]
+                : []),
               ['Ausbau trocken im Plan', fmt(r.plannedDryMassKg, 'kg')],
               ['Ausbau trocken in der Rechnung', fmt(r.dryMassKg, 'kg')],
               ['Frisch- und Grauwasser', fmt(r.fluidKg, 'kg')],
@@ -455,9 +492,8 @@ export function Weight({ model, r }) {
       <Pane title="Basisfahrzeug und Wägung" icon={Truck}>
         <VehicleFields vehicle={v} patch={patchVehicle} />
         <p className="sy-caption">
-          Wiegezustand und spätere Ausstattung müssen zusammenpassen. Wenn beide
-          Achsen gewogen sind, bildet ihre Summe die Basismasse für alle
-          Varianten.
+          Direkte Achswägungen gelten beim Zweiachser als Ausgangsbasis, solange
+          keine Einzelrad-Ausgangswägung für die Prognose ausgewählt ist.
         </p>
       </Pane>
     </>

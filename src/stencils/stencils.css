@@ -1,0 +1,340 @@
+.st-workshop {
+  min-width: 0;
+}
+.st-workshop h2 {
+  margin-bottom: 4px;
+}
+.st-library,
+.st-actions,
+.st-pdf-actions,
+.st-preview-tools,
+.st-name-row,
+.st-delete,
+.st-caption {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 9px 12px;
+}
+.st-library {
+  align-items: flex-end;
+  margin: 1px 0 15px;
+}
+.st-library > .rec-field {
+  width: min(360px, 100%);
+  flex: 0 1 360px;
+}
+.st-library > .rec-icon-btn {
+  width: 37px;
+  height: 37px;
+}
+.st-actions {
+  margin-top: 16px;
+}
+.st-source-detail {
+  margin-top: 13px;
+}
+.st-name-row {
+  align-items: flex-end;
+  margin: 0 0 15px;
+}
+.st-name-row > .rec-field {
+  width: min(360px, 100%);
+}
+.st-note,
+.st-print-hint,
+.st-caption,
+.st-pages span,
+.st-delete {
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--rec-muted, #53685a);
+}
+.st-note {
+  margin: 0;
+}
+.st-note a {
+  color: var(--forest, #315d49);
+  text-underline-offset: 2px;
+}
+.st-delete {
+  background: #fff3e9;
+  padding: 9px 13px;
+  border: 1px solid #e6c7ad;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+.st-layout {
+  display: grid;
+  gap: 14px;
+  align-items: start;
+  grid-template-columns: minmax(0, 1.55fr) minmax(250px, 1fr);
+  grid-template-areas: 'preview output' 'points points';
+}
+.st-preview {
+  grid-area: preview;
+}
+.st-output {
+  grid-area: output;
+}
+.st-points {
+  grid-area: points;
+}
+.st-workshop .rec-section-head {
+  margin-bottom: 14px;
+}
+.st-preview-tools {
+  justify-content: space-between;
+  margin-bottom: 9px;
+}
+.st-preview-tools .btn {
+  padding: 6px 9px;
+  font-size: 12px;
+}
+.st-preview-tools .st-pressed {
+  background: #e4efe6;
+  border-color: #537563;
+  color: #294a36;
+}
+.st-canvas {
+  display: block;
+  width: 100%;
+  height: clamp(190px, 23vw, 335px);
+  border: 1px solid var(--rec-border);
+  border-radius: 7px;
+  background: #f6f8f4;
+}
+.st-crosshair {
+  cursor: crosshair;
+}
+.st-marker {
+  cursor: pointer;
+}
+.st-marker:focus {
+  outline: none;
+}
+.st-marker:focus circle {
+  stroke: #181f1c;
+  stroke-width: 2.5;
+}
+.st-axis {
+  stroke: #92a79a;
+  stroke-width: 1;
+  fill: none;
+  vector-effect: non-scaling-stroke;
+}
+.st-contour {
+  fill: #b8d4c2;
+  fill-opacity: 0.48;
+  stroke: #2c5943;
+  stroke-width: 2;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.st-draft-line {
+  fill: none;
+  stroke: #92765b;
+  stroke-width: 1.4;
+  stroke-dasharray: 5 3;
+  vector-effect: non-scaling-stroke;
+}
+.st-caption {
+  justify-content: space-between;
+  margin-top: 8px;
+  font-size: 12px;
+}
+.st-caption strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--rec-ink);
+}
+.st-pages {
+  display: flex;
+  gap: 11px;
+  align-items: center;
+  margin: 15px 0;
+  padding: 11px 13px;
+  border-radius: 6px;
+  background: var(--rec-soft);
+}
+.st-pages strong,
+.st-pages span {
+  display: block;
+}
+.st-pages strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+.st-pages span {
+  font-size: 12px;
+}
+.st-errors {
+  padding: 10px 12px;
+  margin: 15px 0;
+  color: #704321;
+  background: #fcf3e8;
+  border-left: 3px solid #bf8255;
+  font-size: 13px;
+}
+.st-errors ul {
+  padding-left: 18px;
+  margin: 4px 0 0;
+}
+.st-pdf-actions {
+  gap: 7px;
+}
+.st-workshop .st-pdf-actions .btn {
+  white-space: normal;
+  font-size: 13px;
+}
+.st-output .st-print-hint {
+  margin: 13px 0 0;
+}
+.st-points > .rec-section-head {
+  align-items: center;
+}
+.st-point-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  border-top: 1px solid var(--rec-border);
+}
+.st-point-list > li {
+  border-bottom: 1px solid var(--rec-border);
+  padding: 8px;
+  border-left: 3px solid transparent;
+}
+.st-point-list > li.st-point-active {
+  background: #f4f7f2;
+  border-left-color: var(--forest, #315d49);
+}
+.st-point-main {
+  display: grid;
+  gap: 7px 13px;
+  align-items: end;
+  grid-template-columns:
+    42px minmax(78px, 1fr) minmax(78px, 1fr) minmax(112px, 1.1fr)
+    auto;
+}
+.st-point-main .rec-field,
+.st-number {
+  min-width: 0;
+}
+.st-number {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+.st-number > span,
+.st-via > strong {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.st-number input[aria-invalid='true'] {
+  border-color: #ab513b;
+}
+.st-input-error {
+  font-size: 11px;
+  line-height: 1.35;
+  color: #8a422c;
+}
+.st-point-tools {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.st-point-tools .rec-icon-btn {
+  width: 30px;
+  height: 31px;
+  padding: 4px;
+}
+.st-index {
+  display: grid;
+  align-content: center;
+  height: 32px;
+  border: 1px solid var(--rec-border);
+  border-radius: 6px;
+  background: white;
+  color: var(--rec-ink);
+  font-size: 12px !important;
+  font-weight: 650 !important;
+}
+.st-index[aria-pressed='true'] {
+  background: var(--forest, #315d49);
+  color: white;
+}
+.st-via {
+  margin: 8px 0 2px 55px;
+  display: grid;
+  align-items: end;
+  gap: 7px 13px;
+  grid-template-columns: minmax(75px, 1fr) minmax(95px, 0.85fr) minmax(
+      95px,
+      0.85fr
+    );
+}
+.st-via > strong {
+  align-self: center;
+  color: #85492d;
+}
+@media (max-width: 1100px) {
+  .st-layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(235px, 1fr);
+  }
+  .st-layout .rec-panel {
+    padding: 16px;
+  }
+  .st-point-main {
+    gap: 7px;
+  }
+}
+@media (max-width: 820px) {
+  .st-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'preview' 'points' 'output';
+  }
+  .st-pdf-actions .btn {
+    flex: 0 1 auto;
+  }
+}
+@media (max-width: 600px) {
+  .st-library {
+    gap: 7px;
+  }
+  .st-library > .rec-field {
+    width: 100%;
+    flex-basis: 100%;
+  }
+  .st-point-main {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 7px 10px;
+  }
+  .st-index {
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: start;
+    min-width: 40px;
+  }
+  .st-point-tools {
+    grid-row: 1;
+    grid-column: 2;
+    justify-self: end;
+  }
+  .st-point-main > .rec-field {
+    grid-column: 1 / -1;
+  }
+  .st-via {
+    grid-template-columns: 1fr 1fr;
+    margin-left: 0;
+  }
+  .st-via > strong {
+    grid-column: 1 / -1;
+  }
+  .st-point-list > li {
+    padding: 9px 6px;
+  }
+  .st-points > .rec-section-head {
+    align-items: flex-start;
+  }
+}

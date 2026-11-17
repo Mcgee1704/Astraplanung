@@ -2,6 +2,11 @@ import { makeLayout, layoutVariants } from './layout/templates.js';
 import { syncOpenings } from './layout/links.js';
 import { makeSystems, makeTrip, seasons } from './systems/model.js';
 import { makeRecords } from './records/model.js';
+import {
+  makeWheelWeighing,
+  validWheelWeighing,
+} from './vehicle/wheel-weighing.js';
+import { validStencilDraft } from './stencils/geometry.js';
 
 export const uid = () =>
   globalThis.crypto?.randomUUID?.() ||
@@ -53,6 +58,7 @@ export function makeVehicle(preset = 'van') {
     ...(vehiclePresets[preset] || vehiclePresets.van),
     baseFront: null,
     baseRear: null,
+    wheelWeighing: makeWheelWeighing(),
     weighRef: '',
     notes: '',
   };
@@ -214,6 +220,19 @@ export function readProject(text) {
   checkShape(p.trip, makeTrip(), 'Reiseprofil');
   checkShape(p.systems, makeSystems(), 'Bordtechnik');
   checkShape(p.records, makeRecords(), 'Fahrzeugakte');
+  if (
+    p.vehicle.wheelWeighing !== undefined &&
+    !validWheelWeighing(p.vehicle.wheelWeighing)
+  )
+    throw new Error('Die Radwägung enthält ungültige Messdaten.');
+  const stencilIds = new Set();
+  for (const stencil of p.records.stencils ?? []) {
+    if (!validStencilDraft(stencil) || stencilIds.has(stencil.id))
+      throw new Error(
+        'Eine Schablone ist ungültig oder hat eine doppelte Kennung.',
+      );
+    stencilIds.add(stencil.id);
+  }
   for (const key of ['length', 'width', 'height'])
     if (
       p.vehicle[key] != null &&
@@ -238,6 +257,14 @@ export function readProject(text) {
     )
   )
     throw new Error('Ein Vergleichsfahrzeug ist ungültig.');
+  if (
+    p.systems.candidates?.some(
+      (c) =>
+        c.vehicle.wheelWeighing != null &&
+        !validWheelWeighing(c.vehicle.wheelWeighing),
+    )
+  )
+    throw new Error('Die Radwägung eines Vergleichsfahrzeugs ist ungültig.');
   for (const map of [p.records.cards, p.records.cuts, p.records.routeEdits])
     if (map && Object.values(map).some((v) => !plain(v)))
       throw new Error('Ein Werkstatteintrag ist ungültig.');

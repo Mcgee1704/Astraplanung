@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Ruler, Truck, Weight, Save } from 'lucide-react';
 import { format, makeVehicle, vehiclePresets } from '../project.js';
 import { UnitField } from '../ui.jsx';
+import { makeWheelWeighing, wheelTotals } from './wheel-weighing.js';
 
 const dimensions = [
   ['length', 'Innenlänge'],
@@ -108,19 +109,31 @@ function ProfileDiagram({ vehicle }) {
 export default function VehiclePage({ project, onChange }) {
   const [draft, setDraft] = useState(() => ({ ...project.vehicle })),
     [preset, setPreset] = useState(''),
+    [dirty, setDirty] = useState(false),
     [feedback, setFeedback] = useState('');
+  const wheelStatus = wheelTotals(
+    project.vehicle.wheelWeighing || makeWheelWeighing(),
+    'travel',
+  );
   const set = (k, v) => {
+    setDirty(true);
     setFeedback('Ungespeicherte Änderungen');
     setDraft((d) => ({ ...d, [k]: v }));
   };
-  const save = (e) => {
-    e.preventDefault();
+  const save = () => {
     const vehicle = { ...draft };
     for (const [key] of [...dimensions, ...weights]) {
       const raw = draft[key];
       vehicle[key] = raw === '' || raw == null ? null : Number(raw);
     }
-    onChange((prev) => ({ ...prev, vehicle }));
+    onChange((prev) => ({
+      ...prev,
+      vehicle: {
+        ...vehicle,
+        wheelWeighing: prev.vehicle.wheelWeighing || makeWheelWeighing(),
+      },
+    }));
+    setDirty(false);
     setFeedback('Fahrzeugdaten gespeichert');
   };
   return (
@@ -131,7 +144,13 @@ export default function VehiclePage({ project, onChange }) {
           <p>Maße und Gewichte des Basisfahrzeugs für alle Ausbauvarianten.</p>
         </div>
       </header>
-      <form className="vehicle-form" onSubmit={save}>
+      <form
+        className="vehicle-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          save();
+        }}
+      >
         <section className="panel form-panel">
           <div className="card-heading">
             <h2>
@@ -160,6 +179,7 @@ export default function VehiclePage({ project, onChange }) {
                 disabled={!preset}
                 onClick={() => {
                   setDraft(makeVehicle(preset));
+                  setDirty(true);
                   setFeedback(
                     'Beispielwerte im Formular. Zum Übernehmen speichern.',
                   );
@@ -250,6 +270,29 @@ export default function VehiclePage({ project, onChange }) {
                 onChange={(v) => set('weighRef', v)}
                 placeholder="z. B. Wiegeschein, Tankfüllung und Datum"
               />
+              <div className="rw-vehicle-entry">
+                <a
+                  className="btn"
+                  href="#/gewicht/radlasten"
+                  onClick={(e) => {
+                    if (!dirty) return;
+                    if (!e.currentTarget.closest('form').reportValidity()) {
+                      e.preventDefault();
+                      return;
+                    }
+                    save();
+                  }}
+                >
+                  <Weight size={15} />
+                  {dirty
+                    ? 'Fahrzeug speichern und Radlasten erfassen'
+                    : 'Radlasten erfassen'}
+                </a>
+                <small>
+                  Reisefertig · {wheelStatus.measured} von{' '}
+                  {wheelStatus.required} Rädern gewogen
+                </small>
+              </div>
             </div>
           </section>
         </div>

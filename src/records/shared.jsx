@@ -1,4 +1,5 @@
 import React, { useId } from 'react';
+import { wheelKeys, wheelTotals } from '../vehicle/wheel-weighing.js';
 import {
   allCuts,
   bill,
@@ -483,6 +484,63 @@ function InventorySheet({ items, records }) {
   );
 }
 
+function PrintedWheelWeights({ weighing }) {
+  if (!weighing) return null;
+  const numberFormat = new Intl.NumberFormat('de-DE', {
+    maximumFractionDigits: 3,
+  });
+  const kg = (n) => (Number.isFinite(n) ? numberFormat.format(n) : 'offen');
+  return ['travel', 'baseline'].map((mode) => {
+    const series = weighing[mode];
+    const totals = wheelTotals(weighing, mode);
+    if (!totals.measured && !series.date && !series.note) return null;
+    return (
+      <section key={mode}>
+        <h2>
+          {mode === 'travel'
+            ? 'Reisefertige Radwägung'
+            : 'Radlasten der Ausgangswägung'}
+        </h2>
+        {series.date && <p>Wägedatum {series.date}</p>}
+        {series.note && <p>{series.note}</p>}
+        <SheetTable
+          heads={[
+            'Achse',
+            'Radposition',
+            'Links (kg)',
+            'Rechts (kg)',
+            'Achssumme (kg)',
+          ]}
+        >
+          {weighing.axles.map((axle, index) => {
+            const left = wheelKeys(axle, 'left');
+            const right = wheelKeys(axle, 'right');
+            return left.map((key, i) => (
+              <tr key={key}>
+                <td>{axle.name}</td>
+                <td>
+                  {axle.dual ? (i === 0 ? 'Innen' : 'Außen') : 'Einzelrad'}
+                </td>
+                <td>{kg(series.values[key])}</td>
+                <td>{kg(series.values[right[i]])}</td>
+                {i === 0 && (
+                  <td rowSpan={left.length}>
+                    {kg(totals.axles[index].totalKg)}
+                  </td>
+                )}
+              </tr>
+            ));
+          })}
+        </SheetTable>
+        <p>
+          Gemessene Summen (kg) · Links {kg(totals.leftKg)} · Rechts{' '}
+          {kg(totals.rightKg)} · Gesamt {kg(totals.totalKg)}
+        </p>
+      </section>
+    );
+  });
+}
+
 export function Printable({ project, items, records, archive, innerRef }) {
   return (
     <div className="rec-print-store" aria-hidden="true">
@@ -495,6 +553,7 @@ export function Printable({ project, items, records, archive, innerRef }) {
         </p>
         {archive ? (
           <>
+            <PrintedWheelWeights weighing={project.vehicle?.wheelWeighing} />
             <h2>Bauteile und Wartung</h2>
             {items.map((item) => {
               const card = cardOf(item, records),

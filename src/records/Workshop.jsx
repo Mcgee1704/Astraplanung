@@ -7,6 +7,7 @@ import {
   MapPin,
   Plus,
   RotateCcw,
+  Ruler,
   Scissors,
   Trash2,
 } from 'lucide-react';
@@ -38,6 +39,7 @@ import {
   SheetTable,
 } from './shared.jsx';
 import Routes from './Routes.jsx';
+import StencilWorkshop from '../stencils/StencilWorkshop.jsx';
 
 function rowPatch(rows, id, patch) {
   return rows.map((row) => (row.id === id ? { ...row, ...patch } : row));
@@ -747,14 +749,14 @@ const tabs = [
   ['parts', 'Stückliste', ClipboardList],
   ['draw', 'Maßblätter', Hammer],
   ['cuts', 'Zuschnitte', Scissors],
+  ['stencils', 'Schablonen', Ruler],
   ['routes', 'Leitungen', MapPin],
   ['steps', 'Baufolge', Check],
 ];
 
 export default function Workshop(props) {
-  const { items, records } = props;
-  const [tab, setTab] = useState('parts'),
-    [id, setId] = useState('');
+  const { items, records, tab, setTab } = props;
+  const [id, setId] = useState('');
   const pick = items.find((item) => String(item.id) === String(id)) ?? items[0];
   return (
     <>
@@ -776,6 +778,14 @@ export default function Workshop(props) {
         <Drawings items={items} records={records} pick={pick} setPick={setId} />
       )}
       {tab === 'cuts' && <Cuts {...props} pick={pick} setPick={setId} />}
+      {tab === 'stencils' && (
+        <StencilWorkshop
+          key={props.project.id}
+          items={items}
+          records={records}
+          mutate={props.mutate}
+        />
+      )}
       {tab === 'routes' && <Routes {...props} />}
       {tab === 'steps' && <BuildSteps {...props} />}
     </>

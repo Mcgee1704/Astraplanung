@@ -80,6 +80,7 @@ export function makeRecords(items = []) {
       ]),
     ),
     cuts: {},
+    stencils: [],
     purchases: [],
     routeEdits: {},
     extraRoutes: [],

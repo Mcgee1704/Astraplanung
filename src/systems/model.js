@@ -1,3 +1,4 @@
+import { makeWheelWeighing, wheelTotals } from '../vehicle/wheel-weighing.js';
 import { bill, cardOf, recordsOf } from '../records/model.js';
 import {
   extractionPath,
@@ -474,11 +475,28 @@ function weightBalance(v, items, t, s, records) {
     s.extraFuel && ['gas', 'diesel'].includes(s.heater)
       ? product(nonnegative(s.fuelAmount), nonnegative(s.fuelKg))
       : 0;
-  const extraKg = total([dryMassKg, fluidKg, peopleKg, cargoKg, fuelKg]);
-  const baseFront = positive(v.baseFront),
-    baseRear = positive(v.baseRear);
-  const hasAxleWeights = baseFront !== null && baseRear !== null;
-  const baseKg = hasAxleWeights ? baseFront + baseRear : positive(v.baseMass);
+  const weighing = v.wheelWeighing || makeWheelWeighing();
+  const multiAxle = weighing.axles.length > 2;
+  const wheelBaseline = weighing.useBaseline;
+  const wheelBase = wheelBaseline ? wheelTotals(weighing, 'baseline') : null;
+  const included = wheelBaseline ? weighing.baseline.included : [];
+  const includedKg = total(included.map((entry) => nonnegative(entry.kg)));
+  const extraKg = diff(
+    total([dryMassKg, fluidKg, peopleKg, cargoKg, fuelKg]),
+    includedKg,
+  );
+  const baseFront = wheelBaseline
+    ? wheelBase.axles[0].totalKg
+    : positive(v.baseFront);
+  const baseRear = wheelBaseline
+    ? wheelBase.axles[1].totalKg
+    : positive(v.baseRear);
+  const hasAxleWeights = !multiAxle && baseFront !== null && baseRear !== null;
+  const baseKg = wheelBaseline
+    ? wheelBase.totalKg
+    : hasAxleWeights
+      ? baseFront + baseRear
+      : positive(v.baseMass);
   const massKg = total([baseKg, extraKg]);
   const max = positive(v.maxMass);
   const payloadKg = diff(max, massKg);
@@ -491,17 +509,40 @@ function weightBalance(v, items, t, s, records) {
     const kg = ['fresh', 'grey'].includes(it.kind)
       ? total([dry, tankVolume(it)])
       : dry;
-    return { kg, x: start === null || len === null ? null : start + len / 2 };
+    return {
+      id: 'item:' + it.id,
+      name: it.name,
+      kg,
+      x: start === null || len === null ? null : start + len / 2,
+    };
   });
   entries.push(
-    { kg: peopleKg, x: number(t.occupantX) },
-    { kg: cargoKg, x: number(t.cargoX) },
-    { kg: fuelKg, x: number(s.fuelX) },
+    { id: 'people', name: 'Reisende', kg: peopleKg, x: number(t.occupantX) },
+    {
+      id: 'cargo',
+      name: 'Gepäck und Vorräte',
+      kg: cargoKg,
+      x: number(t.cargoX),
+    },
+    {
+      id: 'fuel',
+      name: 'Separater Heizbrennstoff',
+      kg: fuelKg,
+      x: number(s.fuelX),
+    },
   );
+  const weighingPositions = entries;
+  const loadChanges = [
+    ...entries,
+    ...included.map((entry) => ({
+      kg: entry.kg == null ? null : -entry.kg,
+      x: entry.x,
+    })),
+  ];
   const rearExtra =
     wheelbase !== null && axle !== null
       ? total(
-          entries.map((e) =>
+          loadChanges.map((e) =>
             e.kg === 0
               ? 0
               : e.kg === null || e.x === null
@@ -531,13 +572,17 @@ function weightBalance(v, items, t, s, records) {
     costEur,
     payloadKg,
     hasAxleWeights,
+    multiAxle,
+    wheelBaseline,
+    includedKg,
+    weighingPositions,
     frontKg,
     rearKg,
     frontReserveKg,
     rearReserveKg,
     baseDiscrepancy:
-      hasAxleWeights && positive(v.baseMass) !== null
-        ? baseKg - Number(v.baseMass)
+      hasAxleWeights && includedKg !== null && positive(v.baseMass) !== null
+        ? baseKg - includedKg - Number(v.baseMass)
         : null,
   };
 }

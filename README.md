@@ -17,6 +17,18 @@ Fahrzeugprojekte werden im verwendeten Browser gespeichert. Unter **Projektdatei
 
 Die drei ausgestatteten Beispiele und 18 Tourengrundrisse lassen sich an das eigene Fahrzeug anpassen. Unter **Planungsgrundlagen** kannst du die Innenmaße ansehen und einen Entwurf als neues Projekt öffnen. Höhen, Preise, Massen und Geräteleistungen sind Planansätze, bis ein Aufmaß, eine Wägung oder ein Datenblatt vorliegt. Der 3D-Editor rechnet mit Bauteilhüllen. Für die Montage zählen auch Wandkontur, Befestigung und Anschlussraum.
 
+### Einzelne Radlasten erfassen
+
+Unter **Gewicht & Achsen → Radlasten wiegen** die gemessenen Kilogramm für jedes Rad eintragen. Bei Zwillingsbereifung lassen sich innere und äußere Räder getrennt erfassen. Zusätzliche Achsen können ergänzt werden. Achs-, Seiten- und Gesamtsummen erscheinen, sobald die jeweils benötigten Werte vorliegen. Die Bordakte übernimmt die Einzelwerte, das Wägedatum und den notierten Wiegezustand.
+
+**Reisefertig** dokumentiert das Fahrzeug so, wie es auf der Waage stand. Über **Ausgangswägung** lässt sich ein anderer Messsatz ausdrücklich als Basis für den weiteren Ausbau verwenden. Bereits mitgewogene Einbauten, Personen oder Vorräte dort kennzeichnen, damit die Prognose nur spätere Änderungen berücksichtigt.
+
+### Eine Schablone in Originalgröße drucken
+
+Unter **Werkstatt → Schablonen** eine Vorlage anlegen. Ein Rechteck kann aus zwei gemessenen Kantenlängen oder aus den hinterlegten Ist-Maßen eines Bauteils entstehen. Für eine freie Kontur die X- und Y-Abstände in Millimetern vom selben Nullpunkt aus eintragen, einmal der Kante entlang. Für einen Kreisbogen zusätzlich einen gemessenen Punkt zwischen Anfang und Ende der Kante angeben.
+
+Papierformat und Ausrichtung wählen und die PDF öffnen. Im Druckdialog **Tatsächliche Größe** oder **100 %** einstellen. Die 100-mm-Kontrollstrecken in beiden Richtungen auf dem ersten Ausdruck nachmessen. Bei mehreren Blättern zeigen die Blattkennungen und Passmarken, wie die Bögen mit 10 mm Überlappung zusammengehören. Messpunkte und Druckeinstellungen werden im Projekt gespeichert.
+
 ## Entwicklung
 
 Voraussetzungen sind Node.js ab 22.12 und pnpm.

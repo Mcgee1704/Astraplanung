@@ -196,11 +196,13 @@ export default function Dashboard({ project, onManage }) {
             good={axleOkay}
             title="Achslasten"
             detail={
-              axleKnown
-                ? axleOkay
-                  ? 'Innerhalb der Grenzwerte'
-                  : 'Grenzwerte prüfen'
-                : 'Wägung ergänzen'
+              m.multiAxle
+                ? 'Mehrere Achsen · Einzelrad-Messung ansehen'
+                : axleKnown
+                  ? axleOkay
+                    ? 'Innerhalb der Grenzwerte'
+                    : 'Grenzwerte prüfen'
+                  : 'Wägung ergänzen'
             }
             link="gewicht"
           />

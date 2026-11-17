@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { version } from '../package.json';
 import {
   BookOpen,
   Check,
@@ -354,6 +355,9 @@ function App() {
                     <Upload size={16} />
                     Importieren
                   </button>
+                  <small className="program-version">
+                    Astraplanung {version}
+                  </small>
                 </div>
               )}
             </div>

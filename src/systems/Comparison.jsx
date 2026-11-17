@@ -1,3 +1,4 @@
+import { makeWheelWeighing } from '../vehicle/wheel-weighing.js';
 import React, { useState } from 'react';
 import { Check, Snowflake, Trash2, Truck } from 'lucide-react';
 import {
@@ -251,6 +252,7 @@ function Vehicles({ model }) {
         id: uid(),
         vehicle: {
           ...project.vehicle,
+          wheelWeighing: makeWheelWeighing(),
           name: 'Kandidat ' + (list.length + 1),
           baseMass: null,
           baseFront: null,

@@ -16,6 +16,8 @@ export default function RecordsPage({
     items = partsOf(project);
   const printable = useRef(null);
   const [error, setError] = useState('');
+  const [workTab, setWorkTab] = useState('parts');
+  const stencilActive = !isArchive && workTab === 'stencils';
   const title =
     (project.name || 'Ausbauprojekt') +
     ' – ' +
@@ -45,26 +47,30 @@ export default function RecordsPage({
           <p>
             {isArchive
               ? 'Einbauorte, Ersatzteile und Wartung für unterwegs.'
-              : 'Maßblätter, Material und Leitungswege für den Ausbau.'}
+              : stencilActive
+                ? 'Gemessene Konturen im Maßstab 1:1 als PDF auf Papier übertragen.'
+                : 'Maßblätter, Material und Leitungswege für den Ausbau.'}
           </p>
         </div>
-        <div className="rec-header-actions">
-          <button
-            type="button"
-            className="btn"
-            onClick={() => exportBook(printable.current, title)}
-          >
-            <FileDown size={16} /> Offline-Datei
-          </button>
-          <button
-            type="button"
-            className="btn primary"
-            onClick={() => printBook(printable.current, title, setError)}
-          >
-            <Printer size={16} /> {isArchive ? 'Bordakte' : 'Werkstattmappe'}{' '}
-            drucken
-          </button>
-        </div>
+        {!stencilActive && (
+          <div className="rec-header-actions">
+            <button
+              type="button"
+              className="btn"
+              onClick={() => exportBook(printable.current, title)}
+            >
+              <FileDown size={16} /> Offline-Datei
+            </button>
+            <button
+              type="button"
+              className="btn primary"
+              onClick={() => printBook(printable.current, title, setError)}
+            >
+              <Printer size={16} /> {isArchive ? 'Bordakte' : 'Werkstattmappe'}{' '}
+              drucken
+            </button>
+          </div>
+        )}
       </header>
       {error && (
         <p className="rec-alert" role="alert">
@@ -76,15 +82,26 @@ export default function RecordsPage({
       ) : (
         <Workshop
           {...{ project, items, records, mutate, updateCard, changeItemCost }}
+          tab={workTab}
+          setTab={setWorkTab}
         />
       )}
-      <Printable
-        project={project}
-        items={items}
-        records={records}
-        archive={isArchive}
-        innerRef={printable}
-      />
+      {stencilActive ? (
+        <div className="rec-print-store" aria-hidden="true">
+          <p>
+            Für den maßstäblichen Druck in der Werkstatt bei „Schablonen“ das
+            PDF öffnen und im PDF-Druckdialog 100 % wählen.
+          </p>
+        </div>
+      ) : (
+        <Printable
+          project={project}
+          items={items}
+          records={records}
+          archive={isArchive}
+          innerRef={printable}
+        />
+      )}
     </div>
   );
 }
